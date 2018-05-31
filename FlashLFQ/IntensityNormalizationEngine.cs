@@ -137,6 +137,10 @@ namespace FlashLFQ
                                             peak.CalculateIntensityForThisFeature(integrate);
                                         }
                                     }
+                                    else
+                                    {
+                                        peptides[p].SetIntensity(technicalRep, avgIntensity);
+                                    }
                                 }
                             }
                         }
@@ -225,7 +229,7 @@ namespace FlashLFQ
                     }
 
                     // solve for normalization factors
-                    var normFactors = GetNormalizationFactors(myIntensityArray, numP, 2, numF, b, condition);
+                    var normFactors = GetNormalizationFactors(myIntensityArray, numP, 2, numF);
                     if (normFactors.All(p => p == 1.0) && !silent)
                     {
                         Console.WriteLine("Warning: Could not solve for optimal normalization factors for condition \"" + condition + "\" biorep " + (b + 1));
@@ -390,7 +394,7 @@ namespace FlashLFQ
             return subsetList.ToList();
         }
 
-        private static double[] GetNormalizationFactors(double[,,] proteinIntensities, int numP, int numB, int numF, int bb, string cond)
+        private static double[] GetNormalizationFactors(double[,,] proteinIntensities, int numP, int numB, int numF)
         {
             double step = 0.01;
             object locker = new object();
